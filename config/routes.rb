@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :registrations, only: :create
   end
 
-  resources :todos, only: [:index, :create, :update, :destroy] do
+  resources :todos do
     member do
       put 'complete'
       put 'activate'

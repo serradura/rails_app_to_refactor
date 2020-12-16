@@ -37,6 +37,10 @@ class TodosController < ApplicationController
     render_json(200, todo: @todo.serialize_as_json)
   end
 
+  def show
+    render_json(200, todo: @todo.serialize_as_json)
+  end
+
   def update
     @todo.update(todo_params)
 

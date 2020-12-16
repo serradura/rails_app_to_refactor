@@ -51,24 +51,47 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 201 when creating the user" do
+    # == Arrange ==
+    user_params = { user: { password: '123', password_confirmation: '123', name: 'Rodrigo' } }
+
+    # == Act ==
     assert_difference 'User.count', +1 do
-      post users_registrations_url, params: { user: { password: '123', password_confirmation: '123', name: 'Rodrigo' } }
+      assert_enqueued_emails 1 do
+        post(users_registrations_url, params: user_params)
+      end
     end
 
+    # == Assert ==
     assert_response 201
 
     json = JSON.parse(response.body)
 
-    relation = User.where(id: json.dig("user", "id"))
+    user_id = json.dig("user", "id")
 
+    relation = User.where(id: user_id)
+
+    # FACT: A user will be persisted.
     assert_predicate(relation, :exists?)
 
+    # FACT: The JSON response will have the user's token.
     assert_hash_schema({
       "id" => Integer,
       "name" => "Rodrigo",
       "token" => RegexpPatterns::UUID
     }, json["user"])
 
+    # FACT: An email will be sent after the user creation.
+    job = ActiveJob::Base.queue_adapter.enqueued_jobs.first
+
+    assert_equal("ActionMailer::MailDeliveryJob", job["job_class"])
+
+    assert_equal("UserMailer#welcome", job['arguments'][0..1].join('#'))
+
+    job_user_gid = GlobalID.parse(job['arguments'].last.dig("params", "user", "_aj_globalid"))
+
+    assert_equal(user_id.to_s, job_user_gid.model_id)
+
+    # == Teardown ==
     relation.delete_all
   end
 end

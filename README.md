@@ -1,24 +1,96 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This Rails app has been intentionally designed in a way that there are areas for improvement.
 
-Things you may want to cover:
+It's your mission to find this places and refactor them.
 
-* Ruby version
+## Requirements to run this app
 
-* System dependencies
+* Ruby version: `2.7.2`
+* Database: `sqlite3`
 
-* Configuration
+## How to setup this app
+```sh
+bin/setup
+```
 
-* Database creation
+## Useful commands
 
-* Database initialization
+* `bin/rails test` - it will run the test suite.
+* `bin/rails rubycritic` - it will generate a quality report of this codebase.
 
-* How to run the test suite
+## Examples of cURL requests to interact with the API
 
-* Services (job queues, cache servers, search engines, etc.)
+First, run the application:
 
-* Deployment instructions
+```sh
+bin/rails s
+```
 
-* ...
+Then, use some of the following commands to interact with the API resources:
+
+### Creating a user
+```sh
+curl -X POST "http://localhost:3000/users/registrations" \
+  -H "Content-Type: application/json" \
+  -d '{"user":{"name": "Serradura", "email": "serradura@example.com", "password": "123456", "password_confirmation": "123456"}}'
+```
+
+### Creating a to-do
+```sh
+curl -X POST "http://localhost:3000/todos" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN" \
+  -d '{"todo":{"title": "Buy coffee"}}'
+```
+
+### Viewing a to-do
+```sh
+curl -X GET "http://localhost:3000/todos/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+### Listing to-dos
+```sh
+curl -X GET "http://localhost:3000/todos" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+This resource accepts the status query string to filter the user's to-dos. e.g.
+
+```sh
+curl -X GET "http://localhost:3000/todos?status=completed" -H "Content-Type: application/json" -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+The available statuses to filter are: `overdue`, `completed`, `uncompleted`.
+
+### Updating a to-do
+```sh
+curl -X PUT "http://localhost:3000/todos/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN" \
+  -d '{"todo":{"title": "Buy milk"}}'
+```
+
+### Complete a to-do (it's status will be completed)
+```sh
+curl -X PUT "http://localhost:3000/todos/1/complete" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+### Uncomplete a to-do (it's status will be uncompleted)
+```sh
+curl -X PUT "http://localhost:3000/todos/1/uncomplete" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+### Deleting a to-do
+```sh
+curl -X DELETE "http://localhost:3000/todos/1" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
+```

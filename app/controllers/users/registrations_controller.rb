@@ -2,7 +2,7 @@
 
 class Users::RegistrationsController < ApplicationController
   def create
-    user_params = params.require(:user).permit(:name, :password, :password_confirmation)
+    user_params = params.require(:user).permit(:name, :email, :password, :password_confirmation)
 
     password = user_params[:password].to_s.strip
     password_confirmation = user_params[:password_confirmation].to_s.strip
@@ -19,13 +19,12 @@ class Users::RegistrationsController < ApplicationController
       else
         password_digest = Digest::SHA256.hexdigest(password)
 
-        user_data = {
+        user = User.new(
           name: user_params[:name],
+          email: user_params[:email],
           token: SecureRandom.uuid,
-          password_digest: password_digest,
-        }
-
-        user = User.new(user_data)
+          password_digest: password_digest
+        )
 
         if user.save
           render_json(201, user: user.as_json(only: [:id, :name, :token]))

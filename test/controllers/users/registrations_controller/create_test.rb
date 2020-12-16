@@ -45,14 +45,21 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_response 422
 
     assert_equal(
-      { "user" => { "name" => ["can't be blank"] } },
+      {"user" => {
+        "name" => ["can't be blank"],
+        "email"=>["can't be blank", "is invalid"]
+      }},
       JSON.parse(response.body)
     )
   end
 
   test "should respond with 201 when creating the user" do
     # == Arrange ==
-    user_params = { user: { password: '123', password_confirmation: '123', name: 'Rodrigo' } }
+    user_params = { user: {
+      name: 'Serradura',
+      email: 'serradura@gmail.com',
+      password: '123',
+      password_confirmation: '123' } }
 
     # == Act ==
     assert_difference 'User.count', +1 do
@@ -76,7 +83,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     # FACT: The JSON response will have the user's token.
     assert_hash_schema({
       "id" => Integer,
-      "name" => "Rodrigo",
+      "name" => "Serradura",
       "token" => RegexpPatterns::UUID
     }, json["user"])
 

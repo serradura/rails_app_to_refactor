@@ -26,7 +26,7 @@ class TodosControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 200 when finds the record" do
-    todo = todos(:active)
+    todo = todos(:uncompleted)
 
     get todo_url(id: todo.id), {
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }

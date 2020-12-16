@@ -42,10 +42,10 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal(4, json["todos"].size)
   end
 
-  test "should respond with 200 when the user has to-dos and the status is active" do
+  test "should respond with 200 when the user has to-dos and the given status is uncompleted" do
     user = users(:john_doe)
 
-    get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'active' }
+    get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'uncompleted' }
 
     assert_response 200
 
@@ -56,7 +56,7 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal(2, json["todos"].size)
   end
 
-  test "should respond with 200 when the user has to-dos and the status is completed" do
+  test "should respond with 200 whenthe user has to-dos and the given status is completed" do
     user = users(:john_doe)
 
     get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'completed' }
@@ -72,7 +72,7 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
     assert(json["todos"].all? { |todo| todo['completed_at'].present? })
   end
 
-  test "should respond with 200 when the user has to-dos and the status is overdue" do
+  test "should respond with 200 whenthe user has to-dos and the given status is overdue" do
     user = users(:john_doe)
 
     get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'overdue' }

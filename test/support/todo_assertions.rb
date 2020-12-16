@@ -9,7 +9,7 @@ module TodoAssertions
     assert_hash_schema({
       "id" => Integer,
       "title" => String,
-      "status" => /\A(active|overdue|completed)\z/,
+      "status" => /\A(overdue|completed|uncompleted)\z/,
       "due_at" => Nil_Or_An_ISO8601_Datetime,
       "completed_at" => Nil_Or_An_ISO8601_Datetime,
       "created_at" => RegexpPatterns::ISO8601_DATETIME,

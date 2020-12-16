@@ -23,7 +23,7 @@ class TodosControllerCompleteTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 200 after completes an existing todo" do
-    todo = todos(:active)
+    todo = todos(:uncompleted)
 
     put complete_todo_url(todo), headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
 

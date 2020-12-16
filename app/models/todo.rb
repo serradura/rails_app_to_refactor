@@ -3,15 +3,13 @@
 class Todo < ApplicationRecord
   belongs_to :user
 
-  scope :active, -> { where(completed_at: nil) }
-  scope :overdue, -> { active.where('due_at <= ?', Time.current) }
+  scope :overdue, -> { uncompleted.where('due_at <= ?', Time.current) }
   scope :completed, -> { where.not(completed_at: nil) }
+  scope :uncompleted, -> { where(completed_at: nil) }
 
-  with_options presence: true do
-    validates :title
-    validates :due_at, allow_nil: true
-    validates :completed_at, allow_nil: true
-  end
+  validates :title, presence: true
+  validates :due_at, presence: true, allow_nil: true
+  validates :completed_at, presence: true, allow_nil: true
 
   def overdue?
     return false if !due_at || completed_at
@@ -19,19 +17,19 @@ class Todo < ApplicationRecord
     due_at <= Time.current
   end
 
-  def active?
+  def uncompleted?
     completed_at.nil?
   end
 
   def completed?
-    !active?
+    !uncompleted?
   end
 
   def status
     return 'completed' if completed?
     return 'overdue' if overdue?
 
-    'active'
+    'uncompleted'
   end
 
   def complete
@@ -44,12 +42,12 @@ class Todo < ApplicationRecord
     self.save if completed_at_changed?
   end
 
-  def activate
-    self.completed_at = nil unless active?
+  def uncomplete
+    self.completed_at = nil unless uncompleted?
   end
 
-  def activate!
-    activate
+  def uncomplete!
+    uncomplete
 
     self.save if completed_at_changed?
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::RegistrationsController < ApplicationController
   def create
     user_params = params.require(:user).permit(:name, :password, :password_confirmation)

@@ -30,6 +30,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   gem 'pry-byebug', '~> 3.9'
+
+  gem 'letter_opener', '~> 1.7'
 end
 
 group :development do

@@ -96,6 +96,8 @@ GEM
     kwalify (0.7.2)
     launchy (2.5.0)
       addressable (~> 2.7)
+    letter_opener (1.7.0)
+      launchy (~> 2.2)
     listen (3.3.3)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -220,6 +222,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (~> 1.5, >= 1.5.1)
   byebug
+  letter_opener (~> 1.7)
   listen (~> 3.3, >= 3.3.3)
   pry-byebug (~> 3.9)
   puma (~> 5.1, >= 5.1.1)

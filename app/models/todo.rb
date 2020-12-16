@@ -1,15 +1,15 @@
 class Todo < ApplicationRecord
   belongs_to :user
 
+  scope :active, -> { where(completed_at: nil) }
+  scope :overdue, -> { active.where('due_at <= ?', Time.current) }
+  scope :completed, -> { where.not(completed_at: nil) }
+
   with_options presence: true do
     validates :title
     validates :due_at, allow_nil: true
     validates :completed_at, allow_nil: true
   end
-
-  scope :active, -> { where(completed_at: nil) }
-  scope :overdue, -> { active.where('due_at <= ?', Time.current) }
-  scope :completed, -> { where.not(completed_at: nil) }
 
   def overdue?
     return false if !due_at || completed_at

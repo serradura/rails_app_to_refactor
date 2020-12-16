@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class TodosControllerCreateTest < ActionDispatch::IntegrationTest
+  include TodoAssertions
+
   test "should respond with 401 if the user token is invalid" do
     get todos_url
 
@@ -50,13 +52,15 @@ class TodosControllerCreateTest < ActionDispatch::IntegrationTest
     assert_response 201
 
     json = JSON.parse(response.body)
-    todo = Todo.find(json.dig('todo', 'id'))
 
-    assert_equal(
-      { "todo" => todo.as_json(except: [:user_id], methods: :status) },
-      json
-    )
+    relation = Todo.where(id: json.dig('todo', 'id'))
 
-    todo.delete
+    assert_predicate(relation, :exists?)
+
+    assert_hash_schema({ "todo" => Hash }, json)
+
+    assert_todo_json_schema(json["todo"])
+
+    relation.delete_all
   end
 end

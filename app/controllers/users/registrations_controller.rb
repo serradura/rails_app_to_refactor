@@ -32,7 +32,5 @@ class Users::RegistrationsController < ApplicationController
         end
       end
     end
-  rescue ActionController::ParameterMissing => e
-    render_json(400, error: e.message)
   end
 end

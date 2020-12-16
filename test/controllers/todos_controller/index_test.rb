@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class TodosControllerIndexTest < ActionDispatch::IntegrationTest
+  include TodoAssertions
+
+  def assert_todos_json_schema(json)
+    assert_hash_schema({"todos" => Array}, json)
+
+    json["todos"].each { |item| assert_todo_json_schema(item) }
+  end
+
   test "should respond with 401 if the user token is invalid" do
     get todos_url
 
@@ -29,16 +37,9 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
 
     json = JSON.parse(response.body)
 
-    assert_instance_of(Array, json["todos"])
+    assert_todos_json_schema(json)
 
     assert_equal(4, json["todos"].size)
-
-    json["todos"].each do |item|
-      assert_equal(
-        ["id", "title", "due_at", "completed_at", "created_at", "updated_at", "status"],
-        item.keys
-      )
-    end
   end
 
   test "should respond with 200 when the user has to-dos and the status is active" do
@@ -50,18 +51,9 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
 
     json = JSON.parse(response.body)
 
-    assert_instance_of(Array, json["todos"])
+    assert_todos_json_schema(json)
 
     assert_equal(2, json["todos"].size)
-
-    assert(json["todos"].all? { |todo| todo['completed_at'].blank? })
-
-    json["todos"].each do |item|
-      assert_equal(
-        ["id", "title", "due_at", "completed_at", "created_at", "updated_at", "status"],
-        item.keys
-      )
-    end
   end
 
   test "should respond with 200 when the user has to-dos and the status is completed" do
@@ -73,18 +65,11 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
 
     json = JSON.parse(response.body)
 
-    assert_instance_of(Array, json["todos"])
+    assert_todos_json_schema(json)
 
     assert_equal(2, json["todos"].size)
 
     assert(json["todos"].all? { |todo| todo['completed_at'].present? })
-
-    json["todos"].each do |item|
-      assert_equal(
-        ["id", "title", "due_at", "completed_at", "created_at", "updated_at", "status"],
-        item.keys
-      )
-    end
   end
 
   test "should respond with 200 when the user has to-dos and the status is overdue" do
@@ -96,17 +81,10 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
 
     json = JSON.parse(response.body)
 
-    assert_instance_of(Array, json["todos"])
+    assert_todos_json_schema(json)
 
     assert_equal(1, json["todos"].size)
 
     assert(json["todos"].all? { |todo| todo['completed_at'].blank? })
-
-    json["todos"].each do |item|
-      assert_equal(
-        ["id", "title", "due_at", "completed_at", "created_at", "updated_at", "status"],
-        item.keys
-      )
-    end
   end
 end

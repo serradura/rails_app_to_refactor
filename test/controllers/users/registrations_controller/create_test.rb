@@ -58,12 +58,17 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_response 201
 
     json = JSON.parse(response.body)
-    uuid = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/
 
-    assert_match(uuid, json["user"]["token"])
-    assert_equal("Rodrigo", json["user"]["name"])
-    assert_kind_of(Numeric, json["user"]["id"])
+    relation = User.where(id: json.dig("user", "id"))
 
-    User.where(id: json["user"]["id"]).delete_all
+    assert_predicate(relation, :exists?)
+
+    assert_hash_schema({
+      "id" => Integer,
+      "name" => "Rodrigo",
+      "token" => RegexpPatterns::UUID
+    }, json["user"])
+
+    relation.delete_all
   end
 end

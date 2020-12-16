@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class TodosControllerDestroyTest < ActionDispatch::IntegrationTest
+  include TodoAssertions
+
   test "should respond with 401 if the user token is invalid" do
     delete todo_url(id: 1)
 
@@ -20,7 +22,7 @@ class TodosControllerDestroyTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 200 after deletes an existent todo" do
+  test "should respond with 200 after deletes an existing todo" do
     todo = todos(:active)
 
     assert_difference 'Todo.count', -1 do
@@ -29,9 +31,10 @@ class TodosControllerDestroyTest < ActionDispatch::IntegrationTest
 
     assert_response 200
 
-    assert_equal(
-      { "todo" => todo.as_json(except: [:user_id], methods: :status) },
-      JSON.parse(response.body)
-    )
+    json = JSON.parse(response.body)
+
+    assert_hash_schema({ "todo" => Hash }, json)
+
+    assert_todo_json_schema(json["todo"])
   end
 end

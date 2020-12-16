@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class TodosControllerCompleteTest < ActionDispatch::IntegrationTest
+  include TodoAssertions
+
   test "should respond with 401 if the user token is invalid" do
     put complete_todo_url(id: 1)
 
@@ -20,7 +22,7 @@ class TodosControllerCompleteTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 200 after completes an existent todo" do
+  test "should respond with 200 after completes an existing todo" do
     todo = todos(:active)
 
     put complete_todo_url(todo), headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
@@ -31,9 +33,10 @@ class TodosControllerCompleteTest < ActionDispatch::IntegrationTest
 
     assert_predicate(todo, :completed?)
 
-    assert_equal(
-      { "todo" => todo.as_json(except: [:user_id], methods: :status) },
-      JSON.parse(response.body)
-    )
+    json = JSON.parse(response.body)
+
+    assert_hash_schema({ "todo" => Hash }, json)
+
+    assert_todo_json_schema(json["todo"])
   end
 end

@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
+  include TodoAssertions
+
   test "should respond with 401 if the user token is invalid" do
     put todo_url(id: 1)
 
@@ -72,10 +74,9 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
     refute_equal(previous_title, todo.title)
     assert_equal('Buy coffee', todo.title)
 
-    assert_equal(
-      { "todo" => todo.as_json(except: [:user_id], methods: :status) },
-      json
-    )
+    assert_hash_schema({ "todo" => Hash }, json)
+
+    assert_todo_json_schema(json["todo"])
 
     todo.delete
   end

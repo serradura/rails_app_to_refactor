@@ -51,4 +51,8 @@ class Todo < ApplicationRecord
 
     self.save if completed_at_changed?
   end
+
+  def serialize_as_json
+    as_json(except: [:user_id], methods: :status)
+  end
 end

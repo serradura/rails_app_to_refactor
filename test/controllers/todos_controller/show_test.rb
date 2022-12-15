@@ -12,10 +12,9 @@ class TodosControllerShowTest < ActionDispatch::IntegrationTest
   test "should respond with 404 when the todo was not found" do
     user = users(:rodrigo)
 
-    get todo_url(id: 1), {
+    get todo_url(id: 1),
       headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" },
       params: { title: 'Buy coffee' }
-    }
 
     assert_response 404
 
@@ -28,9 +27,8 @@ class TodosControllerShowTest < ActionDispatch::IntegrationTest
   test "should respond with 200 when finds the record" do
     todo = todos(:uncompleted)
 
-    get todo_url(id: todo.id), {
+    get todo_url(id: todo.id),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
-    }
 
     assert_response 200
 

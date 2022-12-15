@@ -12,10 +12,9 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   test "should respond with 400 when the todo params are missing" do
     todo = todos(:uncompleted)
 
-    put todo_url(todo), {
+    put todo_url(todo),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" },
       params: { title: 'Buy coffee' }
-    }
 
     assert_response 400
 
@@ -28,10 +27,9 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   test "should respond with 404 when the todo was not found" do
     user = users(:rodrigo)
 
-    put todo_url(id: 1), {
+    put todo_url(id: 1),
       headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" },
       params: { title: 'Buy coffee' }
-    }
 
     assert_response 404
 
@@ -44,10 +42,9 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   test "should respond with 422 when receives invalid params" do
     todo = todos(:uncompleted)
 
-    put todo_url(todo), {
+    put todo_url(todo),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" },
       params: { todo: { title: '' } }
-    }
 
     assert_response 422
 
@@ -61,10 +58,9 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
     todo = todos(:uncompleted)
     previous_title = todo.title
 
-    put todo_url(todo), {
+    put todo_url(todo),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" },
       params: { todo: { title: 'Buy coffee' } }
-    }
 
     assert_response 200
 

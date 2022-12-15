@@ -12,10 +12,9 @@ class TodosControllerCreateTest < ActionDispatch::IntegrationTest
   test "should respond with 400 when the todo params are missing" do
     user = users(:rodrigo)
 
-    post todos_url, {
+    post todos_url,
       headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" },
       params: { title: 'Buy coffee' }
-    }
 
     assert_response 400
 
@@ -28,10 +27,9 @@ class TodosControllerCreateTest < ActionDispatch::IntegrationTest
   test "should respond with 422 when receives invalid params" do
     user = users(:rodrigo)
 
-    post todos_url, {
+    post todos_url,
       headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" },
       params: { todo: { title: '' } }
-    }
 
     assert_response 422
 
@@ -44,10 +42,9 @@ class TodosControllerCreateTest < ActionDispatch::IntegrationTest
   test "should respond with 201 when receives valid params" do
     user = users(:rodrigo)
 
-    post todos_url, {
+    post todos_url,
       headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" },
       params: { todo: { title: 'Buy coffee' } }
-    }
 
     assert_response 201
 

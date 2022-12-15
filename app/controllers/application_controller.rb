@@ -22,6 +22,6 @@ class ApplicationController < ActionController::API
     end
 
     def show_parameter_missing_error(exception)
-      render_json(400, error: exception.message.gsub(/\s*Did\ you\ mean\?\ (.|\s)*/, ""))
+      render_json(400, error: exception.message)
     end
 end

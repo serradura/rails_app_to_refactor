@@ -10,13 +10,7 @@ class TodosController < ApplicationController
   end
 
   def index
-    todos =
-      case params[:status]&.strip&.downcase
-      when 'overdue' then Todo.overdue
-      when 'completed' then Todo.completed
-      when 'incomplete' then Todo.incomplete
-      else Todo.all
-      end
+    todos = Todo.filter_by_status(params).order_by(params)
 
     json = todos.where(user_id: current_user.id).map(&:serialize_as_json)
 

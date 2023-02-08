@@ -78,7 +78,12 @@ curl -X GET "http://localhost:3000/todos" \
   -H "Authorization: Bearer SOME-USER-TOKEN"
 ```
 
-This resource accepts the status query string to filter the user's To-Dos. e.g.
+This resource accepts the following query strings:
+- status (e.g, 'completed')
+- sort_by (e.g, 'updated_at')
+- order (e.g, 'asc')
+
+PS: Desc is the default order.
 
 ```sh
 curl -X GET "http://localhost:3000/todos?status=completed" -H "Content-Type: application/json" -H "Authorization: Bearer SOME-USER-TOKEN"

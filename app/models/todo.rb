@@ -7,6 +7,25 @@ class Todo < ApplicationRecord
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
 
+  scope :filter_by_status, ->(params) {
+    case params[:status]&.strip&.downcase
+    when 'overdue' then overdue
+    when 'completed' then completed
+    when 'incomplete' then incomplete
+    else all
+    end
+  }
+
+  scope :order_by, ->(params) {
+    order = params[:order]&.strip&.downcase == 'asc' ? :asc : :desc
+
+    sort_by = params[:sort_by]&.strip&.downcase
+
+    column_name = column_names.excluding('id', 'user_id').include?(sort_by) ? sort_by : 'id'
+
+    order(column_name => order)
+  }
+
   validates :title, presence: true
   validates :due_at, presence: true, allow_nil: true
   validates :completed_at, presence: true, allow_nil: true

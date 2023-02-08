@@ -3,7 +3,7 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
-  before_action :set_todo, only: %i[show destroy update complete uncomplete]
+  before_action :set_todo, only: %i[show destroy update complete incomplete]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json(404, todo: { id: 'not found' })
@@ -14,7 +14,7 @@ class TodosController < ApplicationController
       case params[:status]&.strip&.downcase
       when 'overdue' then Todo.overdue
       when 'completed' then Todo.completed
-      when 'uncompleted' then Todo.uncompleted
+      when 'incomplete' then Todo.incomplete
       else Todo.all
       end
 
@@ -59,8 +59,8 @@ class TodosController < ApplicationController
     render_json(200, todo: @todo.serialize_as_json)
   end
 
-  def uncomplete
-    @todo.uncomplete!
+  def incomplete
+    @todo.incomplete!
 
     render_json(200, todo: @todo.serialize_as_json)
   end

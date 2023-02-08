@@ -42,10 +42,10 @@ class TodosControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal(4, json["todos"].size)
   end
 
-  test "should respond with 200 when the user has to-dos and the given status is uncompleted" do
+  test "should respond with 200 when the user has to-dos and the given status is incomplete" do
     user = users(:john_doe)
 
-    get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'uncompleted' }
+    get todos_url, headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }, params: { status: 'incomplete' }
 
     assert_response 200
 

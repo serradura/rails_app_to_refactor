@@ -4,7 +4,7 @@ class TodosControllerUncompleteTest < ActionDispatch::IntegrationTest
   include TodoAssertions
 
   test "should respond with 401 if the user token is invalid" do
-    put uncomplete_todo_url(id: 1)
+    put incomplete_todo_url(id: 1)
 
     assert_response 401
   end
@@ -12,7 +12,7 @@ class TodosControllerUncompleteTest < ActionDispatch::IntegrationTest
   test "should respond with 404 when the todo was not found" do
     user = users(:rodrigo)
 
-    put uncomplete_todo_url(id: 1), headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }
+    put incomplete_todo_url(id: 1), headers: { 'Authorization' => "Bearer token=\"#{user.token}\"" }
 
     assert_response 404
 
@@ -25,13 +25,13 @@ class TodosControllerUncompleteTest < ActionDispatch::IntegrationTest
   test "should respond with 200 after completes an existing todo" do
     todo = todos(:completed)
 
-    put uncomplete_todo_url(todo), headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
+    put incomplete_todo_url(todo), headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
 
     assert_response 200
 
     todo.reload
 
-    assert_predicate(todo, :uncompleted?)
+    assert_predicate(todo, :incomplete?)
 
     json = JSON.parse(response.body)
 

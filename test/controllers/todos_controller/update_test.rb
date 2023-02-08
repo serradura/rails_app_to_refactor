@@ -10,7 +10,7 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 400 when the todo params are missing" do
-    todo = todos(:uncompleted)
+    todo = todos(:incomplete)
 
     put todo_url(todo),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" },
@@ -40,7 +40,7 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 422 when receives invalid params" do
-    todo = todos(:uncompleted)
+    todo = todos(:incomplete)
 
     put todo_url(todo),
       headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" },
@@ -55,7 +55,7 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 200 when receives valid params" do
-    todo = todos(:uncompleted)
+    todo = todos(:incomplete)
     previous_title = todo.title
 
     put todo_url(todo),

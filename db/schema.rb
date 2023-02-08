@@ -10,15 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[6.1].define(version: 2019_12_03_035409) do
-
+ActiveRecord::Schema[7.0].define(version: 2019_12_03_035409) do
   create_table "todos", force: :cascade do |t|
     t.string "title"
-    t.datetime "due_at"
-    t.datetime "completed_at"
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "due_at", precision: nil
+    t.datetime "completed_at", precision: nil
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["completed_at"], name: "index_todos_on_completed_at"
     t.index ["due_at"], name: "index_todos_on_due_at"
     t.index ["user_id"], name: "index_todos_on_user_id"
@@ -29,8 +28,8 @@ ActiveRecord::Schema[6.1].define(version: 2019_12_03_035409) do
     t.string "email", null: false
     t.string "password_digest", null: false
     t.string "token"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["token"], name: "index_users_on_token"
   end
 

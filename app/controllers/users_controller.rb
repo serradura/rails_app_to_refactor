@@ -34,4 +34,12 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def destroy
+    authenticate_user do
+      current_user.destroy
+
+      render_json(200, user: { email: current_user.email })
+    end
+  end
 end

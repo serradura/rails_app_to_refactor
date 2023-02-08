@@ -7,8 +7,10 @@ class ApplicationController < ActionController::API
 
   protected
 
-    def authenticate_user
-      head :unauthorized unless current_user
+    def authenticate_user(&block)
+      return block&.call if current_user
+
+      head :unauthorized
     end
 
     def current_user

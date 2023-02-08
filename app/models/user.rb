@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :todos
+  has_many :todos, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true, format: URI::MailTo::EMAIL_REGEXP, uniqueness: true

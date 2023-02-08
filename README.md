@@ -11,6 +11,7 @@ It's your mission to find this places and refactor them.
 - [Useful commands](#useful-commands)
 - [Examples of cURL requests to interact with the API](#examples-of-curl-requests-to-interact-with-the-api)
   - [Add a new User](#add-a-new-user)
+  - [Delete a User](#delete-a-user)
   - [Add a new To-Do](#add-a-new-to-do)
   - [Display a To-Do (Show a single item from the To-Do List)](#display-a-to-do-show-a-single-item-from-the-to-do-list)
   - [Display the To-Do List (show all items in the To-Do list)](#display-the-to-do-list-show-all-items-in-the-to-do-list)
@@ -48,9 +49,17 @@ Then, use some of the following commands to interact with the API resources:
 ### Add a new User
 
 ```sh
-curl -X POST "http://localhost:3000/users/registrations" \
+curl -X POST "http://localhost:3000/users" \
   -H "Content-Type: application/json" \
   -d '{"user":{"name": "Serradura", "email": "serradura@example.com", "password": "123456", "password_confirmation": "123456"}}'
+```
+
+### Delete a User
+
+```sh
+curl -X DELETE "http://localhost:3000/user" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SOME-USER-TOKEN"
 ```
 
 ### Add a new To-Do
@@ -117,6 +126,7 @@ curl -X PUT "http://localhost:3000/todos/1/incomplete" \
 ```
 
 ### Remove a To-Do (the item will be permanently deleted from the list)
+
 ```sh
 curl -X DELETE "http://localhost:3000/todos/1" \
   -H "Content-Type: application/json" \

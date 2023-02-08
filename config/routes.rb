@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resources :users, only: [:create]
 
-  resource :user, only: [:destroy]
+  resource :user, only: [:show, :destroy]
 
   resources :todos do
     member do

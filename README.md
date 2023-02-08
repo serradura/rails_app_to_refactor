@@ -12,6 +12,7 @@ It's your mission to find this places and refactor them.
 - [Examples of cURL requests to interact with the API](#examples-of-curl-requests-to-interact-with-the-api)
   - [Add a new User](#add-a-new-user)
   - [Delete a User](#delete-a-user)
+  - [Display a User](#display-a-user)
   - [Add a new To-Do](#add-a-new-to-do)
   - [Display a To-Do (Show a single item from the To-Do List)](#display-a-to-do-show-a-single-item-from-the-to-do-list)
   - [Display the To-Do List (show all items in the To-Do list)](#display-the-to-do-list-show-all-items-in-the-to-do-list)
@@ -23,6 +24,7 @@ It's your mission to find this places and refactor them.
 ## Requirements to run this app
 
 * Ruby version: `3.2.0`
+
 * Database: `sqlite3`
 
 ## How to setup this app
@@ -60,6 +62,14 @@ curl -X POST "http://localhost:3000/users" \
 curl -X DELETE "http://localhost:3000/user" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer SOME-USER-TOKEN"
+```
+
+### Display a User
+
+```sh
+curl -X GET "http://localhost:3000/user" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer 98ce5dab-ed57-42f9-8606-a6fc28807479"
 ```
 
 ### Add a new To-Do

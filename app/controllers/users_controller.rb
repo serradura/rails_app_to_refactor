@@ -35,11 +35,23 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    authenticate_user do
-      current_user.destroy
+  def show
+    perform_if_authenticated
+  end
 
-      render_json(200, user: { email: current_user.email })
+  def destroy
+    perform_if_authenticated do
+      current_user.destroy
     end
   end
+
+  private
+
+    def perform_if_authenticated(&block)
+      authenticate_user do
+        block.call if block
+
+        render_json(200, user: { email: current_user.email })
+      end
+    end
 end

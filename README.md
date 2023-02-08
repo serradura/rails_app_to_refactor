@@ -6,7 +6,7 @@ It's your mission to find this places and refactor them.
 
 ## Requirements to run this app
 
-* Ruby version: `2.7.2`
+* Ruby version: `3.2.0`
 * Database: `sqlite3`
 
 ## How to setup this app
@@ -17,6 +17,7 @@ bin/setup
 ## Useful commands
 
 * `bin/rails test` - it will run the test suite.
+
 * `bin/rails rubycritic` - it will generate a quality report of this codebase.
 
 ## Examples of cURL requests to interact with the API

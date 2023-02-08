@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Todo < ApplicationRecord
+  attr_accessor :completed
+
   belongs_to :user
 
   scope :overdue, -> { incomplete.where('due_at <= ?', Time.current) }
@@ -25,6 +27,13 @@ class Todo < ApplicationRecord
 
     order(column_name => order)
   }
+
+  before_validation on: :update do
+    case completed
+    when 'true' then complete
+    when 'false' then incomplete
+    end
+  end
 
   validates :title, presence: true
   validates :due_at, presence: true, allow_nil: true
@@ -72,6 +81,6 @@ class Todo < ApplicationRecord
   end
 
   def serialize_as_json
-    as_json(except: [:user_id], methods: :status)
+    as_json(except: [:user_id, :completed], methods: :status)
   end
 end

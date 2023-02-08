@@ -14,8 +14,8 @@ It's your mission to find this places and refactor them.
   - [Delete a User](#delete-a-user)
   - [Display a User](#display-a-user)
   - [Add a new To-Do](#add-a-new-to-do)
-  - [Display a To-Do (Show a single item from the To-Do List)](#display-a-to-do-show-a-single-item-from-the-to-do-list)
-  - [Display the To-Do List (show all items in the To-Do list)](#display-the-to-do-list-show-all-items-in-the-to-do-list)
+  - [Display a To-Do (Show a single item from the list)](#display-a-to-do-show-a-single-item-from-the-list)
+  - [Display the To-Do list (show all items in the list)](#display-the-to-do-list-show-all-items-in-the-list)
   - [Edit a To-Do (modify the content of the item)](#edit-a-to-do-modify-the-content-of-the-item)
   - [Mark a To-Do as complete (its status will change to 'completed')](#mark-a-to-do-as-complete-its-status-will-change-to-completed)
   - [Mark a To-Do as incomplete (its status will change to 'incomplete')](#mark-a-to-do-as-incomplete-its-status-will-change-to-incomplete)
@@ -81,7 +81,7 @@ curl -X POST "http://localhost:3000/todos" \
   -d '{"todo":{"title": "Buy coffee"}}'
 ```
 
-### Display a To-Do (Show a single item from the To-Do List)
+### Display a To-Do (Show a single item from the list)
 
 ```sh
 curl -X GET "http://localhost:3000/todos/1" \
@@ -89,7 +89,7 @@ curl -X GET "http://localhost:3000/todos/1" \
   -H "Authorization: Bearer SOME-USER-TOKEN"
 ```
 
-### Display the To-Do List (show all items in the To-Do list)
+### Display the To-Do list (show all items in the list)
 
 ```sh
 curl -X GET "http://localhost:3000/todos" \
@@ -118,6 +118,10 @@ curl -X PUT "http://localhost:3000/todos/1" \
   -H "Authorization: Bearer SOME-USER-TOKEN" \
   -d '{"todo":{"title": "Buy milk"}}'
 ```
+
+**Todo params:**
+* title: `string` `required`.
+* completed: `boolean` `optional`.
 
 ### Mark a To-Do as complete (its status will change to 'completed')
 

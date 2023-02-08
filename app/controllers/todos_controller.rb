@@ -17,7 +17,7 @@ class TodosController < ApplicationController
   end
 
   def create
-    todo = @todos.create(todo_params)
+    todo = @todos.create(todo_params.except(:completed))
 
     if todo.valid?
       render_json(201, todo: todo.serialize_as_json)
@@ -69,6 +69,6 @@ class TodosController < ApplicationController
     end
 
     def todo_params
-      params.require(:todo).permit(:title, :due_at)
+      params.require(:todo).permit(:title, :due_at, :completed)
     end
 end

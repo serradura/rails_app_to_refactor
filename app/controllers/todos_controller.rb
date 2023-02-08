@@ -3,22 +3,21 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
-  before_action :set_todo, only: %i[show destroy update complete incomplete]
+  before_action :set_todos
+  before_action :set_todo, except: [:index, :create]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json(404, todo: { id: 'not found' })
   end
 
   def index
-    todos = Todo.filter_by_status(params).order_by(params)
+    todos = @todos.filter_by_status(params).order_by(params).map(&:serialize_as_json)
 
-    json = todos.where(user_id: current_user.id).map(&:serialize_as_json)
-
-    render_json(200, todos: json)
+    render_json(200, todos:)
   end
 
   def create
-    todo = current_user.todos.create(todo_params)
+    todo = @todos.create(todo_params)
 
     if todo.valid?
       render_json(201, todo: todo.serialize_as_json)
@@ -61,11 +60,15 @@ class TodosController < ApplicationController
 
   private
 
-    def todo_params
-      params.require(:todo).permit(:title, :due_at)
+    def set_todos
+      @todos = current_user.todos
     end
 
     def set_todo
-      @todo = current_user.todos.find(params[:id])
+      @todo = @todos.find(params[:id])
+    end
+
+    def todo_params
+      params.require(:todo).permit(:title, :due_at)
     end
 end

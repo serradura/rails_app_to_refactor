@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
+class UsersControllerCreateTest < ActionDispatch::IntegrationTest
   test "should respond with 400 when the user param is missing" do
-    post users_registrations_url
+    post users_url
 
     assert_response 400
 
@@ -13,7 +13,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 400 when the user password params are missing" do
-    post users_registrations_url, params: { user: { password: '' } }
+    post users_url, params: { user: { password: '' } }
 
     assert_response 422
 
@@ -29,7 +29,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 400 when the user password params are differents" do
-    post users_registrations_url, params: { user: { password: '123', password_confirmation: '321' } }
+    post users_url, params: { user: { password: '123', password_confirmation: '321' } }
 
     assert_response 422
 
@@ -40,7 +40,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with 422 when the user data is invalid" do
-    post users_registrations_url, params: { user: { password: '123', password_confirmation: '123', name: '' } }
+    post users_url, params: { user: { password: '123', password_confirmation: '123', name: '' } }
 
     assert_response 422
 
@@ -64,7 +64,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     # == Act ==
     assert_difference 'User.count', +1 do
       assert_enqueued_emails 1 do
-        post(users_registrations_url, params: user_params)
+        post(users_url, params: user_params)
       end
     end
 

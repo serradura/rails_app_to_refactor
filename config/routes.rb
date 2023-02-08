@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  namespace :users do
-    resources :registrations, only: :create
-  end
+  resources :users, only: :create
 
   resources :todos do
     member do

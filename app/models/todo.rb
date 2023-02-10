@@ -3,7 +3,9 @@
 class Todo < ApplicationRecord
   attr_accessor :completed
 
-  belongs_to :user
+  belongs_to :todo_list, required: true, inverse_of: :todos
+
+  has_one :user, through: :todo_list
 
   scope :overdue, -> { incomplete.where('due_at <= ?', Time.current) }
   scope :completed, -> { where.not(completed_at: nil) }
@@ -23,7 +25,7 @@ class Todo < ApplicationRecord
 
     sort_by = params[:sort_by]&.strip&.downcase
 
-    column_name = column_names.excluding('id', 'user_id').include?(sort_by) ? sort_by : 'id'
+    column_name = column_names.excluding('id').include?(sort_by) ? sort_by : 'id'
 
     order(column_name => order)
   }
@@ -81,6 +83,6 @@ class Todo < ApplicationRecord
   end
 
   def serialize_as_json
-    as_json(except: [:user_id, :completed], methods: :status)
+    as_json(except: [:completed], methods: :status)
   end
 end

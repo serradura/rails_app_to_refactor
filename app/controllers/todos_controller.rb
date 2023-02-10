@@ -3,11 +3,14 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
+  before_action :set_todo_lists
   before_action :set_todos
   before_action :set_todo, except: [:index, :create]
 
-  rescue_from ActiveRecord::RecordNotFound do
-    render_json(404, todo: { id: 'not found' })
+  rescue_from ActiveRecord::RecordNotFound do |not_found|
+    key = not_found.model == 'TodoList' ? :todo_list : :todo
+
+    render_json(404, key => { id: not_found.id, message: 'not found' })
   end
 
   def index
@@ -60,8 +63,17 @@ class TodosController < ApplicationController
 
   private
 
+    def todo_lists_only_non_default? = false
+
     def set_todos
-      @todos = current_user.todos
+      scope =
+        if params[:todo_list_id].present?
+          @todo_lists.find(params[:todo_list_id])
+        else
+          action_name == 'create' ? @todo_lists.default.first! : current_user
+        end
+
+      @todos = scope.todos
     end
 
     def set_todo

@@ -26,4 +26,10 @@ class ApplicationController < ActionController::API
     def show_parameter_missing_error(exception)
       render_json(400, error: exception.message)
     end
+
+    def set_todo_lists
+      user_todo_lists = current_user.todo_lists
+
+      @todo_lists = todo_lists_only_non_default? ? user_todo_lists.non_default : user_todo_lists
+    end
 end

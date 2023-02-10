@@ -10,17 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2019_12_03_035409) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_08_115941) do
+  create_table "todo_lists", force: :cascade do |t|
+    t.string "title"
+    t.boolean "default", default: false, null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_todo_lists_on_user_id"
+  end
+
   create_table "todos", force: :cascade do |t|
     t.string "title"
     t.datetime "due_at", precision: nil
     t.datetime "completed_at", precision: nil
-    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "todo_list_id", null: false
     t.index ["completed_at"], name: "index_todos_on_completed_at"
     t.index ["due_at"], name: "index_todos_on_due_at"
-    t.index ["user_id"], name: "index_todos_on_user_id"
+    t.index ["todo_list_id"], name: "index_todos_on_todo_list_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -33,5 +42,6 @@ ActiveRecord::Schema[7.0].define(version: 2019_12_03_035409) do
     t.index ["token"], name: "index_users_on_token"
   end
 
-  add_foreign_key "todos", "users"
+  add_foreign_key "todo_lists", "users"
+  add_foreign_key "todos", "todo_lists"
 end

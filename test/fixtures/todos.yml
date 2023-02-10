@@ -1,25 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-incomplete:
+john_doe_incomplete:
   title: Buy milk
   completed_at: null
   due_at: null
-  user: john_doe
+  todo_list: john_doe_default
 
-completed:
+john_doe_completed:
   title: Buy bread
   completed_at: <%= Time.current.to_formatted_s(:db) %>
   due_at: null
-  user: john_doe
+  todo_list: john_doe_default
 
-completed_and_overdue:
+john_doe_completed_and_overdue:
   title: Buy bread
   completed_at: <%= Time.current.to_formatted_s(:db) %>
   due_at: <%= 2.days.ago.to_formatted_s(:db) %>
-  user: john_doe
+  todo_list: john_doe_default
 
-overdue:
+john_doe_overdue:
   title: Buy fruits
   completed_at: null
   due_at: <%= 1.day.ago.to_formatted_s(:db) %>
-  user: john_doe
+  todo_list: john_doe_default

@@ -8,11 +8,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
-Rails.root.join('test/support').then do |pathname|
-  require pathname.join('regexp_patterns')
-  require pathname.join('hash_schema_assertions')
-  require pathname.join('todo_assertions')
-end
+Rails.root.join('test/support').glob('*.rb').each { require(_1) }
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers

@@ -1,9 +1,11 @@
 require 'test_helper'
 
 class UsersControllerCreateTest < ActionDispatch::IntegrationTest
-  test "should respond with 400 when the user param is missing" do
+  test "responds with 400 when the user parameter is missing" do
+    # Act
     post users_url
 
+    # Assert
     assert_response 400
 
     assert_equal(
@@ -12,9 +14,11 @@ class UsersControllerCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 400 when the user password params are missing" do
+  test "responds with 400 when password parameters are absent" do
+    # Act
     post users_url, params: { user: { password: '' } }
 
+    # Assert
     assert_response 422
 
     assert_equal(
@@ -28,9 +32,11 @@ class UsersControllerCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 400 when the user password params are differents" do
+  test "responds with 400 when the password confirmation does not match the password" do
+    # Act
     post users_url, params: { user: { password: '123', password_confirmation: '321' } }
 
+    # Assert
     assert_response 422
 
     assert_equal(
@@ -39,9 +45,11 @@ class UsersControllerCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 422 when the user data is invalid" do
+  test "responds with 422 when user data is invalid" do
+    # Act
     post users_url, params: { user: { password: '123', password_confirmation: '123', name: '' } }
 
+    # Assert
     assert_response 422
 
     assert_equal(
@@ -53,22 +61,22 @@ class UsersControllerCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should respond with 201 when creating the user" do
-    # == Arrange ==
+  test "responds with 201 after successfully creating the user" do
+    # Arrange
     user_params = { user: {
       name: 'Serradura',
       email: 'serradura@gmail.com',
       password: '123',
       password_confirmation: '123' } }
 
-    # == Act ==
+    # Act
     assert_difference 'User.count', +1 do
       assert_enqueued_emails 1 do
         post(users_url, params: user_params)
       end
     end
 
-    # == Assert ==
+    # Assert
     assert_response 201
 
     json = JSON.parse(response.body)
@@ -97,8 +105,5 @@ class UsersControllerCreateTest < ActionDispatch::IntegrationTest
     job_user_gid = GlobalID.parse(job['arguments'].last.dig("params", "user", "_aj_globalid"))
 
     assert_equal(user_id.to_s, job_user_gid.model_id)
-
-    # == Teardown ==
-    relation.delete_all
   end
 end

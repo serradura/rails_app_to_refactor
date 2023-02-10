@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+john_doe_default:
+  title: Default
+  default: true
+  user: john_doe
+
+john_doe_non_default:
+  title: Things to learn
+  default: false
+  user: john_doe
+
+without_items:
+  title: Default
+  default: true
+  user: without_todos

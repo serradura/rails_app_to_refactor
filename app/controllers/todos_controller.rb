@@ -70,10 +70,8 @@ class TodosController < ApplicationController
       @todos =
         if params[:todo_list_id].present?
           @todo_lists.find(params[:todo_list_id]).todos
-        elsif action_name == 'create'
-          @todo_lists.default.first!.todos
         else
-          current_user.todos
+          default_or_user_todos
         end
     end
 
@@ -87,5 +85,9 @@ class TodosController < ApplicationController
 
     def render_todo_json(status, todo: nil, errors: nil)
       render_json(status, todo: todo ? todo.serialize_as_json : { errors: errors })
+    end
+
+    def default_or_user_todos
+      action_name == 'create' ? @todo_lists.default.first!.todos : current_user.todos
     end
 end

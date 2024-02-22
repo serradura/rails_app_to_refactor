@@ -21,29 +21,29 @@ class TodoListsController < ApplicationController
     todo_list = @todo_lists.create(todo_list_params)
 
     if todo_list.valid?
-      render_json(:created, todo_list: todo_list.serialize_as_json)
+      render_todo_list_json(:created, todo_list: todo_list)
     else
-      render_json(:unprocessable_entity, todo_list: todo_list.errors.as_json)
+      render_todo_list_json(:unprocessable_entity, errors: todo_list)
     end
   end
 
   def show
-    render_json(:ok, todo_list: @todo_list.serialize_as_json)
+    render_todo_list_json(:ok, todo_list: @todo_list)
   end
 
   def destroy
     @todo_list.destroy
 
-    render_json(:ok, todo_list: @todo_list.serialize_as_json)
+    render_todo_list_json(:ok, todo_list: @todo_list)
   end
 
   def update
     @todo_list.update(todo_list_params)
 
     if @todo_list.valid?
-      render_json(:ok, todo_list: @todo_list.serialize_as_json)
+      render_todo_list_json(:ok, todo_list: @todo_list)
     else
-      render_json(:unprocessable_entity, todo_list: @todo_list.errors.as_json)
+      render_todo_list_json(:unprocessable_entity, errors: @todo_list)
     end
   end
 
@@ -57,5 +57,9 @@ class TodoListsController < ApplicationController
 
     def todo_list_params
       params.require(:todo_list).permit(:title)
+    end
+
+    def render_todo_list_json(status, todo_list: nil, errors: nil)
+      render_json(status, todo_list: todo_list ? todo_list.serialize_as_json : errors.errors.as_json)
     end
 end

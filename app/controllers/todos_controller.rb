@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TodosController < ApplicationController
+  include TodoListable
   before_action :authenticate_user
 
   before_action :set_todo_lists
@@ -10,55 +11,56 @@ class TodosController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do |not_found|
     key = not_found.model == 'TodoList' ? :todo_list : :todo
 
-    render_json(404, key => { id: not_found.id, message: 'not found' })
+    render_json(:not_found, key => { id: not_found.id, message: 'not found' })
   end
 
   def index
-    todos = @todos.filter_by_status(params).order_by(params).map(&:serialize_as_json)
+    filter = TodoFilterQuery.new(@todos, params).call
+    todos = TodoOrderQuery.new(filter, params).call.map(&:serialize_as_json)
 
-    render_json(200, todos:)
+    render_json(:ok, todos:)
   end
 
   def create
     todo = @todos.create(todo_params.except(:completed))
 
     if todo.valid?
-      render_json(201, todo: todo.serialize_as_json)
+      render_todo_json(:created, todo: todo)
     else
-      render_json(422, todo: todo.errors.as_json)
+      render_json(:unprocessable_entity, todo: todo.errors.as_json)
     end
   end
 
   def show
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(:ok, todo: @todo)
   end
 
   def destroy
     @todo.destroy
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_json(:ok, todo: @todo.serialize_as_json)
   end
 
   def update
     @todo.update(todo_params)
 
     if @todo.valid?
-      render_json(200, todo: @todo.serialize_as_json)
+      render_todo_json(:ok, todo: @todo)
     else
-      render_json(422, todo: @todo.errors.as_json)
+      render_json(:unprocessable_entity, todo: @todo.errors.as_json)
     end
   end
 
   def complete
-    @todo.complete!
+    TodoCompleter.new(@todo).call
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(:ok, todo: @todo)
   end
 
   def incomplete
-    @todo.incomplete!
+    TodoIncompleter.new(@todo).call
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(:ok, todo: @todo)
   end
 
   private
@@ -66,14 +68,12 @@ class TodosController < ApplicationController
     def todo_lists_only_non_default? = false
 
     def set_todos
-      scope =
+      @todos =
         if params[:todo_list_id].present?
-          @todo_lists.find(params[:todo_list_id])
+          @todo_lists.find(params[:todo_list_id]).todos
         else
-          action_name == 'create' ? @todo_lists.default.first! : current_user
+          default_or_user_todos
         end
-
-      @todos = scope.todos
     end
 
     def set_todo
@@ -82,5 +82,13 @@ class TodosController < ApplicationController
 
     def todo_params
       params.require(:todo).permit(:title, :due_at, :completed)
+    end
+
+    def render_todo_json(status, todo: nil, errors: nil)
+      render_json(status, todo: todo ? todo.serialize_as_json : { errors: errors })
+    end
+
+    def default_or_user_todos
+      action_name == 'create' ? @todo_lists.default.first!.todos : current_user.todos
     end
 end

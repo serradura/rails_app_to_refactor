@@ -20,15 +20,7 @@ class Todo < ApplicationRecord
     end
   }
 
-  scope :order_by, ->(params) {
-    order = params[:order]&.strip&.downcase == 'asc' ? :asc : :desc
-
-    sort_by = params[:sort_by]&.strip&.downcase
-
-    column_name = column_names.excluding('id').include?(sort_by) ? sort_by : 'id'
-
-    order(column_name => order)
-  }
+  scope :order_by, ->(params) { TodoOrderQuery.new(self, params).call }
 
   before_validation on: :update do
     case completed

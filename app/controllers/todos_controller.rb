@@ -51,13 +51,13 @@ class TodosController < ApplicationController
   end
 
   def complete
-    @todo.complete!
+    TodoCompleter.new(@todo).call
 
     render_json(200, todo: @todo.serialize_as_json)
   end
 
   def incomplete
-    @todo.incomplete!
+    TodoIncompleter.new(@todo).call
 
     render_json(200, todo: @todo.serialize_as_json)
   end

@@ -24,14 +24,14 @@ class TodosController < ApplicationController
     todo = @todos.create(todo_params.except(:completed))
 
     if todo.valid?
-      render_json(201, todo: todo.serialize_as_json)
+      render_todo_json(201, todo: todo)
     else
       render_json(422, todo: todo.errors.as_json)
     end
   end
 
   def show
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(200, todo: @todo)
   end
 
   def destroy
@@ -44,7 +44,7 @@ class TodosController < ApplicationController
     @todo.update(todo_params)
 
     if @todo.valid?
-      render_json(200, todo: @todo.serialize_as_json)
+      render_todo_json(200, todo: @todo)
     else
       render_json(422, todo: @todo.errors.as_json)
     end
@@ -53,13 +53,13 @@ class TodosController < ApplicationController
   def complete
     TodoCompleter.new(@todo).call
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(200, todo: @todo)
   end
 
   def incomplete
     TodoIncompleter.new(@todo).call
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_todo_json(200, todo: @todo)
   end
 
   private
@@ -83,5 +83,9 @@ class TodosController < ApplicationController
 
     def todo_params
       params.require(:todo).permit(:title, :due_at, :completed)
+    end
+
+    def render_todo_json(status, todo: nil, errors: nil)
+      render_json(status, todo: todo ? todo.serialize_as_json : { errors: errors })
     end
 end

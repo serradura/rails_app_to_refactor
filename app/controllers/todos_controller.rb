@@ -67,14 +67,14 @@ class TodosController < ApplicationController
     def todo_lists_only_non_default? = false
 
     def set_todos
-      scope =
+      @todos =
         if params[:todo_list_id].present?
-          @todo_lists.find(params[:todo_list_id])
+          @todo_lists.find(params[:todo_list_id]).todos
+        elsif action_name == 'create'
+          @todo_lists.default.first!.todos
         else
-          action_name == 'create' ? @todo_lists.default.first! : current_user
+          current_user.todos
         end
-
-      @todos = scope.todos
     end
 
     def set_todo

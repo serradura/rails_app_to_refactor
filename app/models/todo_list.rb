@@ -8,16 +8,6 @@ class TodoList < ApplicationRecord
   scope :default, -> { where(default: true) }
   scope :non_default, -> { where(default: false) }
 
-  scope :order_by, ->(params) {
-    order = params[:order]&.strip&.downcase == 'asc' ? :asc : :desc
-
-    sort_by = params[:sort_by]&.strip&.downcase
-
-    column_name = column_names.excluding('id', 'user_id').include?(sort_by) ? sort_by : 'id'
-
-    order(column_name => order)
-  }
-
   validates :title, presence: true
   validates :default, inclusion: { in: [true, false] }
   validate :default_uniqueness

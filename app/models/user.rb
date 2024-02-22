@@ -10,10 +10,4 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true, format: URI::MailTo::EMAIL_REGEXP, uniqueness: true
   validates :token, presence: true, length: { is: 36 }, uniqueness: true
-
-  private
-
-    def send_welcome_email
-      UserMailer.with(user: self).welcome.deliver_later
-    end
 end

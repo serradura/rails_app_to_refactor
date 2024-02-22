@@ -10,15 +10,9 @@ class TodoList < ApplicationRecord
 
   validates :title, presence: true
   validates :default, inclusion: { in: [true, false] }
-  validate :default_uniqueness
+  validates :default, uniqueness: { scope: :user_id, message: 'already exists' }, if: :default?
 
   def serialize_as_json
     as_json(except: [:user_id])
   end
-
-  private
-
-    def default_uniqueness
-      errors.add(:default, 'already exists') if default? && user.todo_lists.default.exists?
-    end
 end

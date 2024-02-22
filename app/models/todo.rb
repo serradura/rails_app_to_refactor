@@ -38,8 +38,6 @@ class Todo < ApplicationRecord
   end
 
   validates :title, presence: true
-  validates :due_at, presence: true, allow_nil: true
-  validates :completed_at, presence: true, allow_nil: true
 
   def overdue?
     return false if !due_at || completed_at

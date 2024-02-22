@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TodosController < ApplicationController
+  include TodoListable
   before_action :authenticate_user
 
   before_action :set_todo_lists

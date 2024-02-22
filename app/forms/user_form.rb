@@ -11,11 +11,10 @@ class UserForm
     def save
         return false unless valid?
 
-        password_digest = Digest::SHA256.hexdigest(password)
         user = User.new(
           name: name,
           email: email,
-          token: SecureRandom.uuid,
+          token: token,
           password_digest: password_digest
         )
     
@@ -34,6 +33,14 @@ class UserForm
 
     private
     
+    def password_digest
+        Digest::SHA256.hexdigest(password)
+    end
+
+    def token
+        SecureRandom.uuid
+    end
+
     def password_confirmation_matches
         def password_confirmation_matches
             errors.add(:password_confirmation, "doesn't match password") if password != password_confirmation

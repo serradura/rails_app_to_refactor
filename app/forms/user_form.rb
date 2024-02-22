@@ -27,10 +27,6 @@ class UserForm
         end
     end
 
-    # def user
-    #     @user
-    # end
-
     private
     
     def password_digest

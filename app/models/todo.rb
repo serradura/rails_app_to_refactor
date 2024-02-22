@@ -11,17 +11,6 @@ class Todo < ApplicationRecord
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
 
-  scope :filter_by_status, ->(params) {
-    case params[:status]&.strip&.downcase
-    when 'overdue' then overdue
-    when 'completed' then completed
-    when 'incomplete' then incomplete
-    else all
-    end
-  }
-
-  scope :order_by, ->(params) { TodoOrderQuery.new(self, params).call }
-
   before_validation on: :update do
     case completed
     when 'true' then complete

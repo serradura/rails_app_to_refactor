@@ -12,7 +12,7 @@ class TodoListsController < ApplicationController
   end
 
   def index
-    todo_lists = @todo_lists.order_by(params).map(&:serialize_as_json)
+    todo_lists = TodoOrderQuery.new(@todo_lists, params).call.map(&:serialize_as_json)
 
     render_json(:ok, todo_lists: todo_lists)
   end

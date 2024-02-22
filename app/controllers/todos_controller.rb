@@ -15,7 +15,8 @@ class TodosController < ApplicationController
   end
 
   def index
-    todos = @todos.filter_by_status(params).order_by(params).map(&:serialize_as_json)
+    filter = TodoFilterQuery.new(@todos, params).call
+    todos = TodoOrderQuery.new(filter, params).call.map(&:serialize_as_json)
 
     render_json(:ok, todos:)
   end

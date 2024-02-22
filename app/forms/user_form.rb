@@ -42,8 +42,6 @@ class UserForm
     end
 
     def password_confirmation_matches
-        def password_confirmation_matches
-            errors.add(:password_confirmation, "doesn't match password") if password != password_confirmation
-        end
+        errors.add(:password_confirmation, "doesn't match password") if password != password_confirmation
     end
 end

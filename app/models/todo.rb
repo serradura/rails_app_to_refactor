@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Todo < ApplicationRecord
-  attr_accessor :completed
 
   belongs_to :todo_list, required: true, inverse_of: :todos
 
@@ -11,14 +10,14 @@ class Todo < ApplicationRecord
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
 
-  before_validation on: :update do
-    case completed
-    when 'true' then complete
-    when 'false' then incomplete
+  validates :title, presence: true
+
+  def completed=(value)
+    case value.to_s
+    when 'true' then complete!
+    when 'false' then incomplete!
     end
   end
-
-  validates :title, presence: true
 
   def overdue?
     return false if !due_at || completed_at
@@ -48,7 +47,7 @@ class Todo < ApplicationRecord
   def complete!
     complete
 
-    self.save if completed_at_changed?
+    save if completed_at_changed?
   end
 
   def incomplete
@@ -58,7 +57,7 @@ class Todo < ApplicationRecord
   def incomplete!
     incomplete
 
-    self.save if completed_at_changed?
+    save if completed_at_changed?
   end
 
   def serialize_as_json

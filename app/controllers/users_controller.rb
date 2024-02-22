@@ -17,17 +17,17 @@ class UsersController < ApplicationController
     render_json(200, user: { email: current_user.email })
   end
 
-def destroy
-  if current_user.destroy
-    render_json(200, user: { email: current_user.email })
-  else
-    render_json(422, errors: current_user.errors.as_json)
+  def destroy
+    if current_user.destroy
+      render_json(200, user: { email: current_user.email })
+    else
+      render_json(422, errors: current_user.errors.as_json)
+    end
   end
-end
 
   private
 
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
+  def user_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
 end

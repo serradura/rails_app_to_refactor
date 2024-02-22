@@ -11,55 +11,55 @@ class TodosController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do |not_found|
     key = not_found.model == 'TodoList' ? :todo_list : :todo
 
-    render_json(404, key => { id: not_found.id, message: 'not found' })
+    render_json(:not_found, key => { id: not_found.id, message: 'not found' })
   end
 
   def index
     todos = @todos.filter_by_status(params).order_by(params).map(&:serialize_as_json)
 
-    render_json(200, todos:)
+    render_json(:ok, todos:)
   end
 
   def create
     todo = @todos.create(todo_params.except(:completed))
 
     if todo.valid?
-      render_todo_json(201, todo: todo)
+      render_todo_json(:created, todo: todo)
     else
-      render_json(422, todo: todo.errors.as_json)
+      render_json(:unprocessable_entity, todo: todo.errors.as_json)
     end
   end
 
   def show
-    render_todo_json(200, todo: @todo)
+    render_todo_json(:ok, todo: @todo)
   end
 
   def destroy
     @todo.destroy
 
-    render_json(200, todo: @todo.serialize_as_json)
+    render_json(:ok, todo: @todo.serialize_as_json)
   end
 
   def update
     @todo.update(todo_params)
 
     if @todo.valid?
-      render_todo_json(200, todo: @todo)
+      render_todo_json(:ok, todo: @todo)
     else
-      render_json(422, todo: @todo.errors.as_json)
+      render_json(:unprocessable_entity, todo: @todo.errors.as_json)
     end
   end
 
   def complete
     TodoCompleter.new(@todo).call
 
-    render_todo_json(200, todo: @todo)
+    render_todo_json(:ok, todo: @todo)
   end
 
   def incomplete
     TodoIncompleter.new(@todo).call
 
-    render_todo_json(200, todo: @todo)
+    render_todo_json(:ok, todo: @todo)
   end
 
   private

@@ -8,6 +8,6 @@ module ErrorHandleable
     protected
   
     def show_parameter_missing_error(exception)
-      render_json(400, error: exception.message)
+      render_json(:bad_request, error: exception.message)
     end
   end

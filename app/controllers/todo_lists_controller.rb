@@ -8,42 +8,42 @@ class TodoListsController < ApplicationController
   before_action :set_todo_list, except: [:index, :create]
 
   rescue_from ActiveRecord::RecordNotFound do |not_found|
-    render_json(404, todo_list: { id: not_found.id, message: 'not found' })
+    render_json(:not_found, todo_list: { id: not_found.id, message: 'not found' })
   end
 
   def index
     todo_lists = @todo_lists.order_by(params).map(&:serialize_as_json)
 
-    render_json(200, todo_lists: todo_lists)
+    render_json(:ok, todo_lists: todo_lists)
   end
 
   def create
     todo_list = @todo_lists.create(todo_list_params)
 
     if todo_list.valid?
-      render_json(201, todo_list: todo_list.serialize_as_json)
+      render_json(:created, todo_list: todo_list.serialize_as_json)
     else
-      render_json(422, todo_list: todo_list.errors.as_json)
+      render_json(:unprocessable_entity, todo_list: todo_list.errors.as_json)
     end
   end
 
   def show
-    render_json(200, todo_list: @todo_list.serialize_as_json)
+    render_json(:ok, todo_list: @todo_list.serialize_as_json)
   end
 
   def destroy
     @todo_list.destroy
 
-    render_json(200, todo_list: @todo_list.serialize_as_json)
+    render_json(:ok, todo_list: @todo_list.serialize_as_json)
   end
 
   def update
     @todo_list.update(todo_list_params)
 
     if @todo_list.valid?
-      render_json(200, todo_list: @todo_list.serialize_as_json)
+      render_json(:ok, todo_list: @todo_list.serialize_as_json)
     else
-      render_json(422, todo_list: @todo_list.errors.as_json)
+      render_json(:unprocessable_entity, todo_list: @todo_list.errors.as_json)
     end
   end
 

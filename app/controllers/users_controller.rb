@@ -7,21 +7,21 @@ class UsersController < ApplicationController
     form = UserForm.new(user_params)
 
     if form.save
-      render_json(201, user: form.user.as_json(only: [:id, :name, :token]))
+      render_json(:created, user: form.user.as_json(only: [:id, :name, :token]))
     else
-      render_json(422, user: form.errors.as_json)
+      render_json(:unprocessable_entity, user: form.errors.as_json)
     end
   end
 
   def show
-    render_json(200, user: { email: current_user.email })
+    render_json(:ok, user: { email: current_user.email })
   end
 
   def destroy
     if current_user.destroy
-      render_json(200, user: { email: current_user.email })
+      render_json(:ok, user: { email: current_user.email })
     else
-      render_json(422, errors: current_user.errors.as_json)
+      render_json(:unprocessable_entity, errors: current_user.errors.as_json)
     end
   end
 

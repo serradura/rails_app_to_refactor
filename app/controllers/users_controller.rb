@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  before_action :authenticate_user, only: [:show, :destroy]
+
   def create
     form = UserForm.new(user_params)
 
@@ -12,26 +14,20 @@ class UsersController < ApplicationController
   end
 
   def show
-    perform_if_authenticated
+    render_json(200, user: { email: current_user.email })
   end
 
-  def destroy
-    perform_if_authenticated do
-      current_user.destroy
-    end
+def destroy
+  if current_user.destroy
+    render_json(200, user: { email: current_user.email })
+  else
+    render_json(422, errors: current_user.errors.as_json)
   end
+end
 
   private
 
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
-
-    def perform_if_authenticated(&block)
-      authenticate_user do
-        block.call if block
-
-        render_json(200, user: { email: current_user.email })
-      end
     end
 end

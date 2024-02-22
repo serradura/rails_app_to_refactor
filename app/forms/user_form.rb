@@ -5,7 +5,7 @@ class UserForm
 
     validates :password, presence: true
     validates :password_confirmation, presence: true
-    validate :password_confirmation_matches, if: -> { password.present? || password_confirmation.present? }   
+    validate :password_confirmation_matches, if: -> { password.present? && password_confirmation.present? }   
 
 
     def save

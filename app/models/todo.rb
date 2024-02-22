@@ -40,24 +40,14 @@ class Todo < ApplicationRecord
     'incomplete'
   end
 
-  def complete
-    self.completed_at = Time.current unless completed?
-  end
-
   def complete!
-    complete
-
-    save if completed_at_changed?
-  end
-
-  def incomplete
-    self.completed_at = nil unless incomplete?
+    return if completed?
+    update(completed_at: Time.current)
   end
 
   def incomplete!
-    incomplete
-
-    save if completed_at_changed?
+    return if incomplete?
+    update(completed_at: nil)
   end
 
   def serialize_as_json

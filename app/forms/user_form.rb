@@ -1,7 +1,7 @@
 class UserForm
     include ActiveModel::Model
 
-    attr_accessor :name, :email, :password, :password_confirmation
+    attr_accessor :name, :email, :password, :password_confirmation, :user
 
     validates :password, presence: true
     validates :password_confirmation, presence: true
@@ -11,25 +11,25 @@ class UserForm
     def save
         return false unless valid?
 
-        user = User.new(
+        service = UserSignupService.new(
           name: name,
           email: email,
           token: token,
           password_digest: password_digest
         )
     
-        if user.save
-          @user = user
+        if service.call
+          @user = service.user
           true
         else
-          errors.merge!(user.errors)
+          errors.merge!(service.user.errors)
           false
         end
     end
 
-    def user
-        @user
-    end
+    # def user
+    #     @user
+    # end
 
     private
     

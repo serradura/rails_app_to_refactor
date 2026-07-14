@@ -7,6 +7,10 @@ class Todo < ApplicationRecord
 
   has_one :user, through: :todo_list
 
+  validates :title, presence: true
+  validates :due_at, presence: true, allow_nil: true
+  validates :completed_at, presence: true, allow_nil: true
+
   scope :overdue, -> { incomplete.where('due_at <= ?', Time.current) }
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
@@ -37,9 +41,6 @@ class Todo < ApplicationRecord
     end
   end
 
-  validates :title, presence: true
-  validates :due_at, presence: true, allow_nil: true
-  validates :completed_at, presence: true, allow_nil: true
 
   def overdue?
     return false if !due_at || completed_at

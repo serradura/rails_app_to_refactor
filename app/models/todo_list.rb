@@ -5,6 +5,10 @@ class TodoList < ApplicationRecord
 
   belongs_to :user, required: true, inverse_of: :todo_lists
 
+  validates :title, presence: true
+  validates :default, inclusion: { in: [true, false] }
+  validate :default_uniqueness
+
   scope :default, -> { where(default: true) }
   scope :non_default, -> { where(default: false) }
 
@@ -18,9 +22,6 @@ class TodoList < ApplicationRecord
     order(column_name => order)
   }
 
-  validates :title, presence: true
-  validates :default, inclusion: { in: [true, false] }
-  validate :default_uniqueness
 
   def serialize_as_json
     as_json(except: [:user_id])

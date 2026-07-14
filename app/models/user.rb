@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+
+  # TODO: add password confirmation mixin
+  # add before_hook to generate token
+  # add before_hook to digest password
+
   has_many :todo_lists, dependent: :destroy, inverse_of: :user
   has_many :todos, through: :todo_lists
 
@@ -16,10 +21,13 @@ class User < ApplicationRecord
 
   private
 
+  # move this into our UserService#create method
+  # it's not related to this user object
     def create_default_todo_list
       todo_lists.create!(title: 'Default', default: true)
     end
 
+  # move this into our UserService#create method
     def send_welcome_email
       UserMailer.with(user: self).welcome.deliver_later
     end

@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   resources :users, only: [:create]
 
+  # TODO: should be /users/:id
   resource :user, only: [:show, :destroy]
 
   resources :todos do

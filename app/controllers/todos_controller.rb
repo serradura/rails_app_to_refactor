@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+# TODO: Create a TodoListService or ToDoService to perform all functions more efficiently
 class TodosController < ApplicationController
   before_action :authenticate_user
 
+  # this could become expensive - re: db calls.
   before_action :set_todo_lists
   before_action :set_todos
   before_action :set_todo, except: [:index, :create]

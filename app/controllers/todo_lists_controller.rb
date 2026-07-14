@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+
+# TODO: Create a TodoListService to perform all functions more efficiently
+
 class TodoListsController < ApplicationController
   before_action :authenticate_user
 

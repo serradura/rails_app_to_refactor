@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  # has_secure_password
+
+  # move validations to model, debloat controller
+  # password = user_params[:password].to_s.strip
+  # password_confirmation = user_params[:password_confirmation].to_s.strip
+
+  # errors = {}
+  # errors[:password] = ["can't be blank"] if password.blank?
+  # errors[:password_confirmation] = ["can't be blank"] if password_confirmation.blank?
+
+  # if errors.present?
+  #   render_json(422, user: errors)
+  # else
+  #   if password != password_confirmation
+  #     render_json(422, user: { password_confirmation: ["doesn't match password"] })
+  #   else
+  # end
+
   has_many :todo_lists, dependent: :destroy, inverse_of: :user
   has_many :todos, through: :todo_lists
 

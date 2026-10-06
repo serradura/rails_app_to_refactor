@@ -63,7 +63,9 @@ class TodosController < ApplicationController
 
   private
 
-    def todo_lists_only_non_default? = false
+    def set_todo_lists
+      @todo_lists = current_user.todo_lists
+    end
 
     def set_todos
       scope =

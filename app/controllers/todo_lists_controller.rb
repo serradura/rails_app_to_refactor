@@ -48,7 +48,16 @@ class TodoListsController < ApplicationController
 
   private
 
+    # rename for clarity
     def todo_lists_only_non_default? = action_name.in?(['update', 'destroy'])
+
+    # def set_todo_lists
+    #   @todo_lists = current_user.todo_lists
+    # end
+
+    def set_todo_lists
+      @todo_lists = todo_lists_only_non_default? ? user_todo_lists.non_default : user_todo_lists
+    end
 
     def set_todo_list
       @todo_list = @todo_lists.find(params[:id])

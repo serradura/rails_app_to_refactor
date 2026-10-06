@@ -27,9 +27,11 @@ class ApplicationController < ActionController::API
       render_json(400, error: exception.message)
     end
 
-    def set_todo_lists
-      user_todo_lists = current_user.todo_lists
+    # move todo list context into related controllers
+    # could also move into controllers/concerns, could also use services
+    # def set_todo_lists
+    #   user_todo_lists = current_user.todo_lists
 
-      @todo_lists = todo_lists_only_non_default? ? user_todo_lists.non_default : user_todo_lists
-    end
+    #   @todo_lists = todo_lists_only_non_default? ? user_todo_lists.non_default : user_todo_lists
+    # end
 end
